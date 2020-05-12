@@ -1,0 +1,49 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:  
+  name: persistent-storage  
+  labels:    
+    type: local
+spec:  
+  capacity:    
+    storage: 4Gi  
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: local-storage
+  local:    
+    path: "/var/lib/pv1"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - osp-cloudops-04.ext.cloudops.lab.eng.rdu2.redhat.com
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:  
+  name: persistent-storage-wp
+  labels:    
+    type: local
+spec:  
+  capacity:    
+    storage: 2Gi  
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: local-storage
+  local:    
+    path: "/var/lib/pv2"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - osp-cloudops-04.ext.cloudops.lab.eng.rdu2.redhat.com
