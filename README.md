@@ -65,10 +65,11 @@ velero install \
 ### Deploy wordpress application
 ```
 kubectl create ns wordpress
+kubectl create -n wordpress -f local-storage.yaml
 kubectl create -n wordpress secret generic mysql-pass --from-literal=password=<YOUR_PASSWORD>
-kubectl create -f velero-demo/pv.yaml
-kubectl create -f velero-demo/mysql-deployment.yaml
-kubectl create -f velero-demo/wordpress-deployment.yaml
+kubectl create -n wordpress -f velero-demo/pv.yaml
+kubectl create -n wordpress -f velero-demo/mysql-deployment.yaml
+kubectl create -n wordpress -f velero-demo/wordpress-deployment.yaml
 ```
 #### Check for wordpress url
 ```
