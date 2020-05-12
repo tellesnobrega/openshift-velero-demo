@@ -1,7 +1,8 @@
 kind: PersistentVolume
 apiVersion: v1
 metadata:  
-  name: persistent-storage  
+  name: persistent-storage
+  namespace: wordpress
   labels:    
     type: local
 spec:  
@@ -27,6 +28,7 @@ kind: PersistentVolume
 apiVersion: v1
 metadata:  
   name: persistent-storage-wp
+  namespace: wordpress
   labels:    
     type: local
 spec:  
