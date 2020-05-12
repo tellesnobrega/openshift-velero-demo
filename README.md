@@ -33,9 +33,8 @@ yum install -y kubectl
 ### Install minikube
 ```
 sudo yum -y install conntrack
-curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x minikube
-sudo mkdir -p /usr/local/bin/
-sudo install minikube /usr/local/bin/
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-1.9.2-0.x86_64.rpm
+sudo rpm -ivh minikube-1.9.2-0.x86_64.rpm
 minikube start --driver=none
 ```
 
