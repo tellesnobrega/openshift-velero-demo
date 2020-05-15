@@ -35,5 +35,8 @@ kubectl delete ns wordpress
 #### Run restore command
 ```
 velero restore create --from-backup BACKUP_NAME OPTIONS...
+kubectl -n wordpress patch svc wordpress -p '{"spec": { "type": "NodePort", "ports": [ { "nodePort": <PORT>, "port": 80, "protocol": "TCP", "targetPort": 80 } ] } }'
 
 ```
+
+Replace <PORT> with the port from previous wordpress deployment. This is needed because wordpress keeps url information on the database and after the restore minikube gives the service a new PORT. Patching this solves this redirecting issue.
