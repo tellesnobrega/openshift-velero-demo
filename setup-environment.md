@@ -52,6 +52,23 @@ rm -rf velero*
 git clone https://github.com/tellesnobrega/velero-demo.git
 ```
 
+### Install Helm
+```
+yum -y install openssl
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+```
+
+### Install local-volume-provider
+```
+git clone https://github.com/kubernetes-sigs/sig-storage-local-static-provisioner.git
+cd sig-storage-local-statis-provisioner/
+kubectl create -f deployment/kubernetes/example/default_example_storageclass.yaml
+helm template ./helm/provisioner > deployment/kubernetes/provisioner_generated.yaml
+kubectl create -f deployment/kubernetes/provisioner_generated.yaml
+```
+
 ### Install Velero in the Kubernetes Cluster
 ```
 velero install \
@@ -65,12 +82,14 @@ velero install \
 
 ### Deploy wordpress application
 ```
-mkdir -p /var/lib/pv1
-mkdir -p /var/lib/pv2
+mkdir /mnt/disks
+for vol in pv1 pv2; do
+    mkdir /mnt/disks/$vol
+    mount -t tmpfs $vol /mnt/disks/$vol
+done
+
 kubectl create ns wordpress
-kubectl create -n wordpress -f velero-demo/local-storage.yaml
 kubectl create -n wordpress secret generic mysql-pass --from-literal=password=<YOUR_PASSWORD>
-kubectl create -n wordpress -f velero-demo/pv.yaml
 kubectl create -n wordpress -f velero-demo/mysql-deployment.yaml
 kubectl create -n wordpress -f velero-demo/wordpress-deployment.yaml
 ```
