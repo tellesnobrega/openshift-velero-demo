@@ -63,7 +63,7 @@ chmod 700 get_helm.sh
 ### Install local-volume-provider
 ```
 git clone https://github.com/kubernetes-sigs/sig-storage-local-static-provisioner.git
-cd sig-storage-local-statis-provisioner/
+cd sig-storage-local-static-provisioner/
 kubectl create -f deployment/kubernetes/example/default_example_storageclass.yaml
 helm template ./helm/provisioner > deployment/kubernetes/provisioner_generated.yaml
 kubectl create -f deployment/kubernetes/provisioner_generated.yaml
