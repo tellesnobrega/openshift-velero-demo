@@ -43,6 +43,7 @@ Here we will create two loopback disks so we can create a local storage volume o
 ```
 oc get nodes
 oc debug nodes/<node_name_from_previous_command>
+chroot /host
 cd /home
 dd if=/dev/zero of=loopbackfile.img bs=100M count=10
 dd if=/dev/zero of=loopbackfile2.img bs=100M count=10
@@ -54,16 +55,42 @@ mkfs.ext4 /home/loopbackfile.img
 mkfs.ext4 /home/loopbackfile2.img 
 mkdir /mnt/loopfs1
 mkdir /mnt/loopfs2
-mount -o loop /dev/loop0 /loopfs1
-mount -o loop /dev/loop1 /loopfs2
-df -hP /loopfs1/
-df -hP /loopfs2/
+mount -o loop /dev/loop0 /mnt/loopfs1
+mount -o loop /dev/loop1 /mnt/loopfs2
+df -hP /mnt/loopfs1/
+df -hP /mnt/loopfs2/
 
+```
+### Install local storage operator
+
+Update the local-storage.yaml channel field with your openshift version
+
+```
+oc apply -f openshift-velero-demo/local-storage.yaml
+```
+
+Make sure the operator is running
+
+```
+oc -n local-storage get pods
+```
+
+Provision the local volumes. Remember to change the values field to your host name and make sure the PV are created, it may take a few seconds.
+
+```
+oc apply -f openshift-velero-demo/local-volume.yaml
+oc get pv
 ```
 
 ### Install Velero
 
-Now we need to install velero to our kubernetes cluster.
+Now we need to install velero to our openshift cluster.
+
+
+##### Clone this repo
+```
+git clone https://github.com/tellesnobrega/openshift-velero-demo.git
+```
 
 ##### Download Velero 1.3.2 Release
 ```
@@ -79,16 +106,18 @@ velero install \
    --use-restic \
    --plugins velero/velero-plugin-for-aws:v1.0.0 \
    --bucket kubedemo \
-   --secret-file ./velero-demo/minio.credentials \
+   --secret-file ./openshift-velero-demo/minio.credentials \
    --backup-location-config region=minio,s3ForcePathStyle=true,s3Url=http://<ip>:9000
+   
+oc adm policy add-scc-to-user privileged -z velero -n velero
+oc patch ds/restic \
+   --namespace velero \
+   --type json \
+   -p '[{"op":"add","path":"/spec/template/spec/containers/0/securityContext","value": { "privileged": true}}]'
 ```
+
 
 ### Deploy WordPress application
-
-##### Clone this repo
-```
-git clone https://github.com/tellesnobrega/openshift-velero-demo.git
-```
 
 ##### Deploy application
 ```
