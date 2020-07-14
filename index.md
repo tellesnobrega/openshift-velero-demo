@@ -38,6 +38,8 @@ crc oc-env | head -1
 ```
 
 ### Create loopback disks on the CRC machine to use as local volumes
+
+Here we will create two loopback disks so we can create a local storage volume on OpenShift and attach them to the wordpress and mysql containers.
 ```
 oc get nodes
 oc debug nodes/<node_name_from_previous_command>
