@@ -21,12 +21,12 @@ metadata:
   labels:
     app: wordpress
 spec:
-  storageClassName: local-storage
+  storageClassName: local-sc
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
+      storage: 1000Mi
 ---
 apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
 kind: Deployment
@@ -49,7 +49,7 @@ spec:
         tier: frontend
     spec:
       containers:
-      - image: image-registry.openshift-image-registry.svc:5000/wordpress/wordpress@sha256:0490e4d14f2d620d4a3e21aa2b5d2159069f72aabc9d60b9a4abada6111f6dae
+      - image: image-registry.openshift-image-registry.svc:5000/default/wordpress@sha256:b3da42a3b6a346e173ac86f94478d6fdc746a46d4a9dc25a9cec8150cdd0a6d8
         name: wordpress
         env:
         - name: WORDPRESS_DB_HOST

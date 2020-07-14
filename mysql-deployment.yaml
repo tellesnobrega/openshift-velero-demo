@@ -21,12 +21,12 @@ metadata:
   labels:
     app: wordpress
 spec:
-  storageClassName: local-storage
+  storageClassName: local-sc
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
+      storage: 1000Mi
 ---
 apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
 kind: Deployment
