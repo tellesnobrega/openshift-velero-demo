@@ -7,7 +7,7 @@ metadata:
     app: wordpress
 spec:
   ports:
-    - port: 80
+    - port: 8080
   selector:
     app: wordpress
     tier: frontend
@@ -49,7 +49,7 @@ spec:
         tier: frontend
     spec:
       containers:
-      - image: wordpress:4.8-apache
+      - image: image-registry.openshift-image-registry.svc:5000/wordpress/wordpress@sha256:0490e4d14f2d620d4a3e21aa2b5d2159069f72aabc9d60b9a4abada6111f6dae
         name: wordpress
         env:
         - name: WORDPRESS_DB_HOST
@@ -60,7 +60,7 @@ spec:
               name: mysql-pass
               key: password
         ports:
-        - containerPort: 80
+        - containerPort: 8080
           name: wordpress
         volumeMounts:
         - name: wordpress-persistent-storage
